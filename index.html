@@ -3,16 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/styles.css">
-    <title>Momo Memory: The Game</title>
+    <title>Momo Memory: Login</title>
 </head>
 <body>
-    <h1>Hola</h1>
-
+    <header>
+        <img src="img/logo.jpg" alt="logo" id="logo">
+        <h1>Momo Memory: The Game</h1>
+    </header>
+    <p id="error-message"></p>
+    <main>
+        <form action="juego.html" id="login-form">
+            <div class="item-form">
+                <label for="username">Enter your username:</label>
+                <input type="text" id="username" name="username" placeholder="Username" required>
+            </div>
+            <div class="item-form">
+                <label for="difficulty">Select difficulty:</label>
+                <select id="difficulty" name="difficulty" required>
+                    <option value="" disabled selected>Selecciona una dificultad</option>
+                    <option value="3">Easy</option>
+                    <option value="2">Medium</option>
+                    <option value="1">Hard</option>
+                </select>
+            </div>
+            <div class="item-form">
+                <label for="tamano">Tamaño</label>
+                <select name="tamano" id="tamano">
+                    <option value="" disabled selected>Selecciona un tamaño</option>
+                    <option value="3">3x3</option>
+                    <option value="4">4x4</option>
+                    <option value="5">5x5</option>
+                </select>
+            </div>
+            <div class="item-form" id="avatarSection">
+                <div id="avatar">
+                    <label for="avatar">avatar</label>
+                    <div id="avatarContainer">
+                        <img src="img/logo.jpg" alt="mainAvatar" id="avatarImg">
+                    </div>
+                </div>
+                <div class="avatar-grid">
+                    <div class="avatarItem">
+                        <img src="img/avatar-1.jpg" alt="imagen" class="avatarImgSelect" draggable="true">
+                    </div>
+                    <div class="avatarItem">
+                        <img src="img/avatar-2.jpg" alt="imagen" class="avatarImgSelect" draggable="true">
+                    </div>
+                    <div class="avatarItem">
+                        <img src="img/avatar-3.jpg" alt="imagen" class="avatarImgSelect" draggable="true">
+                    </div>
+                    <div class="avatarItem">
+                        <img src="img/avatar-4.jpg" alt="imagen" class="avatarImgSelect" draggable="true">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" id="startBtn">Start Game</button>
+        </form>
+    </main>
     <script src="js/app.js"></script>
 </body>
 </html>

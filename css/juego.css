@@ -1,0 +1,94 @@
+main {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* pantallaDeJuego ocupa el doble de espacio que datosJugador */
+    gap: 32px;
+    max-width: 1200px;
+    margin: 32px auto;
+    width: 100%;
+    align-items: flex-start;
+}
+#pantallaDeJuego {
+    background: #232323;
+    border-radius: 16px;
+    min-height: 500px;
+    box-shadow: 0 2px 8px #0003;
+    padding: 24px;
+}
+#datosJugador {
+    background: #232323;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px #0003;
+    padding: 24px 16px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 220px;
+    max-width: 320px;
+}
+#datosJugador h2 {
+    color: #c8ff00;
+    margin-bottom: 16px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+#avatarDisplay {
+    margin-bottom: 16px;
+}
+#avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #c8ff00;
+    box-shadow: 0 2px 8px #0003;
+}
+#datosJugador p {
+    margin: 8px 0;
+    font-size: 1rem;
+    width: 100%;
+    text-align: left;
+}
+#datosJugador strong {
+    color: #c8ff00;
+    font-weight: 600;
+}
+
+/*ESTILO DE LA CARTA*/
+#pantallaDeJuego {
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    min-height: 400px;
+    background: #232323;
+    border-radius: 16px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.carta {
+    background: #1b1b1b;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #0003;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.15s;
+    max-width: 100px; /* Opcional: limita el tamaño máximo de la carta */
+}
+
+.carta img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
