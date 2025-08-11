@@ -8,7 +8,10 @@ function comprobarDatosJugador() {
 
 var cartasVolteadas = [];
 var cartasAcertadas = [];
+var cartasEspecialesCheckout = [];
 var totalCartasGlobal = 0;
+var comentariosPositivos = ["¡Buen trabajo!", "¡Sigue así!", "¡Excelente!", "¡Muy bien hecho!", "¡Impresionante!"];
+var comentariosNegativos = ["¡Inténtalo de nuevo!", "¡No te rindas!", "¡Puedes hacerlo mejor!", "¡Sigue practicando!", "¡No te preocupes, sigue jugando!"];
 
 //crea el
 function crearTablero(tamano, dificultad) {
@@ -37,10 +40,13 @@ function crearTablero(tamano, dificultad) {
     // Agrega cartas especiales según dificultad
     if (dificultad === "3") { // Fácil
         cartasEspeciales.push('img/plus.jpg');
+        cartasEspecialesCheckout.push('img/plus.jpg');
     } else if (dificultad === "2") { // Media
         cartasEspeciales.push('img/plus.jpg', 'img/bomba.jpg');
+        cartasEspecialesCheckout.push('img/plus.jpg', 'img/bomba.jpg');
     } else if (dificultad === "1") { // Difícil
         cartasEspeciales.push('img/plus.jpg', 'img/bomba.jpg', 'img/bomba.jpg');
+        cartasEspecialesCheckout.push('img/plus.jpg', 'img/bomba.jpg', 'img/bomba.jpg');
     }
 
     // Calcula cuántos pares normales necesitas
@@ -101,17 +107,27 @@ function crearTablero(tamano, dificultad) {
 // Voltea la carta al hacer click
 function voltearCarta(event) {
     const carta = event.currentTarget;
+    const cartasource = carta.dataset.src;
     const imgBack = carta.querySelector('.carta-back');
     const imgFront = carta.querySelector('.carta-front');
     imgBack.style.display = 'none';
     imgFront.style.display = 'block';
     carta.removeEventListener('click', voltearCarta); // Desactiva el evento click para evitar doble click
-    cartasVolteadas.push(carta);
 
+    if(cartasEspecialesCheckout.includes(cartasource)) {
+        eventoEspecial(cartasource);
+        return; // Si es carta especial, no se añade a las cartas volteadas
+    }
+
+    // Añade la carta a las cartas volteadas
+    cartasVolteadas.push(carta);
+    
     if (cartasVolteadas.length === 2) {
        setTimeout(comprobarPareja, 1000); // Espera 1 segundo antes de comprobar la pareja
-        };
+    };
     }
+
+    
 
 // Comprueba si las dos cartas volteadas son iguales
 function comprobarPareja() {
@@ -125,6 +141,7 @@ function comprobarPareja() {
         cartasAcertadas.push(cartasVolteadas[0], cartasVolteadas[1]);
         let puntos = document.getElementById('puntos');
         puntos.textContent = parseInt(puntos.textContent) + 1; // Incrementa los puntos
+        document.getElementById('comentarios').textContent = comentariosPositivos[Math.floor(Math.random() * comentariosPositivos.length)];
     } else {
         // Si no son iguales, las vuelve a voltear
         cartasVolteadas.forEach(carta => {
@@ -133,6 +150,7 @@ function comprobarPareja() {
             const imgFront = carta.querySelector('.carta-front');
             imgBack.style.display = 'block';
             imgFront.style.display = 'none';
+            document.getElementById('comentarios').textContent = comentariosNegativos[Math.floor(Math.random() * comentariosNegativos.length)];
         });
     }
     // Limpia el array de cartas volteadas
@@ -184,16 +202,41 @@ function mostrarVictoria() {
     document.getElementById('btnReintentar').onclick = () => location.reload();
 }
 
+//Carta especial
+function eventoEspecial(cartasource) {
+    if (cartasource === 'img/plus.jpg') {
+        // Si es carta plus, suma un intento
+        let intentos = document.getElementById('intentos');
+        intentos.textContent = parseInt(intentos.textContent) + 3
+        document.getElementById('comentarios').textContent = "¡Los ladrillos del Momo!";
+    } else if (cartasource === 'img/bomba.jpg') {
+        // Si es carta bomba, resta un intento
+        let intentos = document.getElementById('intentos');
+        intentos.textContent = parseInt(intentos.textContent) - 5
+        document.getElementById('comentarios').textContent = "¡Cuidado! Es Viruzz";
+        if (intentos.textContent <= 0) {
+            mostrarDerrota(); // Si se queda sin intentos, muestra derrota
+        }
+    }
+}
+
 //Cargar cargar Listeners
 function cargarListenersydatosJugador(){
+    let nombredificultad = ["dificil", "media","facil" ];
     //Cargamos datos del jugador y configuramos el juego
     const jugador = JSON.parse(sessionStorage.getItem('jugador'));
     document.getElementById('username').textContent = jugador.username;
-    document.getElementById('difficulty').textContent = jugador.difficulty;
+    document.getElementById('difficulty').textContent = nombredificultad[jugador.difficulty - 1];
     document.getElementById('tamano').textContent = jugador.tamano + "x" + jugador.tamano;
     document.getElementById('avatar').src = jugador.avatarSrc;
     document.getElementById('puntos').textContent = 0;
-    document.getElementById('intentos').textContent = 2; //parseInt(jugador.difficulty) * 12
+    document.getElementById('intentos').textContent = parseInt(jugador.difficulty) * 12; // 12 intentos por cada nivel de dificultad
+
+    document.getElementById('regresar').addEventListener('click', function() {
+    window.location.href = 'index.html';
+    });
+
+    document.getElementById('comentarios').textContent = "¡A jugar!";
 
     // Pasa la dificultad como string
     crearTablero(parseInt(jugador.tamano), jugador.difficulty);
