@@ -7,6 +7,8 @@ function comprobarDatosJugador() {
     }
 
 var cartasVolteadas = [];
+var cartasAcertadas = [];
+var totalCartasGlobal = 0;
 
 //crea el
 function crearTablero(tamano, dificultad) {
@@ -44,6 +46,7 @@ function crearTablero(tamano, dificultad) {
     // Calcula cuántos pares normales necesitas
     let cantidadEspeciales = cartasEspeciales.length;
     let cantidadParesNormales = (totalCartas - cantidadEspeciales) / 2;
+    totalCartasGlobal = cantidadParesNormales * 2; // Total de cartas incluyendo especiales
 
     // Selecciona imágenes normales y duplica cada una
     let imagenesSeleccionadas = imagenesBase.slice(0, cantidadParesNormales);
@@ -119,7 +122,7 @@ function comprobarPareja() {
 
     if (cartasVolteadas[0].dataset.src == cartasVolteadas[1].dataset.src) {
         // Si son iguales, las deja visibles
-        cartasVolteadas = []; // Limpia el array de cartas volteadas
+        cartasAcertadas.push(cartasVolteadas[0], cartasVolteadas[1]);
         let puntos = document.getElementById('puntos');
         puntos.textContent = parseInt(puntos.textContent) + 1; // Incrementa los puntos
     } else {
@@ -131,8 +134,15 @@ function comprobarPareja() {
             imgBack.style.display = 'block';
             imgFront.style.display = 'none';
         });
-        cartasVolteadas = []; // Limpia el array de cartas volteadas
     }
+    // Limpia el array de cartas volteadas
+    cartasVolteadas = [];
+    //Si acertadas es igual al total de cartas, muestra victoria
+        if(cartasAcertadas.length == totalCartasGlobal) {
+            mostrarVictoria(); // Llama a la función de victoria si todas las cartas han sido acertadas
+        } else if (intentos.textContent <= 0) {
+            mostrarDerrota(); // Llama a la función de derrota si se acabaron los intentos
+        }
 }
 
 
@@ -145,6 +155,35 @@ function shuffle(array) {
     return array;
 }
 
+//Pantalla de derrota
+function mostrarDerrota() {
+     const tablero = document.getElementById('pantallaDeJuego');
+     tablero.style.gridTemplateColumns = ''; // Quita el grid
+    tablero.innerHTML = `
+        <div class="resultado">
+            <h2 style="color:#ff4d4f;">¡Derrota!</h2>
+            <p>Te has quedado sin intentos.</p>
+            <button id="btnReintentar">Volver a jugar</button>
+        </div>
+    `;
+    document.getElementById('btnReintentar').onclick = () => location.reload();
+}
+
+
+//Pantalla de victoria
+function mostrarVictoria() {
+    const tablero = document.getElementById('pantallaDeJuego');
+    tablero.style.gridTemplateColumns = ''; // Quita el grid
+    tablero.innerHTML = `
+        <div class="resultado">
+            <h2 style="color:#c8ff00;">¡Victoria!</h2>
+            <p>¡Has encontrado todas las parejas!</p>
+            <button id="btnReintentar">Jugar de nuevo</button>
+        </div>
+    `;
+    document.getElementById('btnReintentar').onclick = () => location.reload();
+}
+
 //Cargar cargar Listeners
 function cargarListenersydatosJugador(){
     //Cargamos datos del jugador y configuramos el juego
@@ -154,7 +193,7 @@ function cargarListenersydatosJugador(){
     document.getElementById('tamano').textContent = jugador.tamano + "x" + jugador.tamano;
     document.getElementById('avatar').src = jugador.avatarSrc;
     document.getElementById('puntos').textContent = 0;
-    document.getElementById('intentos').textContent = parseInt(jugador.difficulty) * 12;
+    document.getElementById('intentos').textContent = 2; //parseInt(jugador.difficulty) * 12
 
     // Pasa la dificultad como string
     crearTablero(parseInt(jugador.tamano), jugador.difficulty);
